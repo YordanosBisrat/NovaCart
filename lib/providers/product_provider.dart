@@ -28,4 +28,42 @@ class ProductProvider extends ChangeNotifier {
     _isLoading = false;
     notifyListeners();
   }
+
+  Future<void> addProduct(Map<String, dynamic> data) async {
+    try {
+      final newProduct = await _apiService.addProduct(data);
+      _products.add(newProduct);
+      notifyListeners();
+    } catch (e) {
+      _error = e.toString();
+      notifyListeners();
+    }
+  }
+
+  Future<void> deleteProduct(int id) async {
+    try {
+      await _apiService.deleteProduct(id);
+      _products.removeWhere((p) => p.id == id);
+      notifyListeners();
+    } catch (e) {
+      _error = e.toString();
+      notifyListeners();
+    }
+  }
+
+  Future<void> updateProduct(int id, Map<String, dynamic> data) async {
+    try {
+      final updated = await _apiService.updateProduct(id, data);
+
+      int index = _products.indexWhere((p) => p.id == id);
+      if (index != -1) {
+        _products[index] = updated;
+      }
+
+      notifyListeners();
+    } catch (e) {
+      _error = e.toString();
+      notifyListeners();
+    }
+  }
 }
