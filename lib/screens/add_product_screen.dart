@@ -14,6 +14,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
   final _priceController = TextEditingController();
   final _descriptionController = TextEditingController();
   final _imageController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
 
   @override
   void dispose() {
@@ -25,6 +26,9 @@ class _AddProductScreenState extends State<AddProductScreen> {
   }
 
   void _submit() async {
+    if (!_formKey.currentState!.validate()) {
+      return;
+    }
     final provider = Provider.of<ProductProvider>(context, listen: false);
 
     final data = {
@@ -47,31 +51,70 @@ class _AddProductScreenState extends State<AddProductScreen> {
       appBar: AppBar(title: const Text("Add Product")),
       body: Padding(
         padding: const EdgeInsets.all(16),
-        child: Column(
-          children: [
-            TextField(
-              controller: _titleController,
-              decoration: const InputDecoration(labelText: "Title"),
-            ),
-            TextField(
-              controller: _priceController,
-              decoration: const InputDecoration(labelText: "Price"),
-              keyboardType: TextInputType.number,
-            ),
-            TextField(
-              controller: _descriptionController,
-              decoration: const InputDecoration(labelText: "Description"),
-            ),
-            TextField(
-              controller: _imageController,
-              decoration: const InputDecoration(labelText: "Image URL"),
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: _submit,
-              child: const Text("Add Product"),
-            ),
-          ],
+        child: Form(
+          key: _formKey,
+          child: Column(
+            children: [
+              TextFormField(
+                controller: _titleController,
+                decoration: const InputDecoration(labelText: "Title"),
+                validator: (value) {
+                  if (value == null || value.trim().isEmpty) {
+                    return "Please enter a title";
+                  }
+                  return null;
+                },
+              ),
+              TextFormField(
+                controller: _priceController,
+                decoration: const InputDecoration(labelText: "Price"),
+                keyboardType: TextInputType.number,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return "Please enter a price";
+                  }
+
+                  if (double.tryParse(value) == null) {
+                    return "Enter a valid number";
+                  }
+
+                  return null;
+                },
+              ),
+              TextFormField(
+                controller: _descriptionController,
+                decoration: const InputDecoration(labelText: "Description"),
+                validator: (value) {
+                  if (value == null || value.trim().isEmpty) {
+                    return "Please enter a description";
+                  }
+                  return null;
+                },
+              ),
+              TextFormField(
+                controller: _imageController,
+                decoration: const InputDecoration(labelText: "Image URL"),
+              ),
+              const SizedBox(height: 20),
+              Consumer<ProductProvider>(
+                builder: (context, provider, child) {
+                  return ElevatedButton(
+                    onPressed: provider.isLoading ? null : _submit,
+                    child: provider.isLoading
+                        ? const SizedBox(
+                            width: 20,
+                            height: 20,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              color: Colors.white,
+                            ),
+                          )
+                        : const Text("Add Product"),
+                  );
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );

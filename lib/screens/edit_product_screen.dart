@@ -13,6 +13,8 @@ class EditProductScreen extends StatefulWidget {
 }
 
 class _EditProductScreenState extends State<EditProductScreen> {
+  final _formKey = GlobalKey<FormState>();
+
   late TextEditingController titleController;
   late TextEditingController priceController;
   late TextEditingController descriptionController;
@@ -47,6 +49,10 @@ class _EditProductScreenState extends State<EditProductScreen> {
   void updateProduct() async {
     final provider = Provider.of<ProductProvider>(context, listen: false);
 
+    if (!_formKey.currentState!.validate()) {
+      return;
+    }
+
     final updatedData = {
       "title": titleController.text,
       "price": double.tryParse(priceController.text) ?? 0,
@@ -63,41 +69,82 @@ class _EditProductScreenState extends State<EditProductScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final provider = Provider.of<ProductProvider>(context);
+
     return Scaffold(
       appBar: AppBar(title: const Text("Edit Product")),
       body: Padding(
         padding: const EdgeInsets.all(16),
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              TextField(
-                controller: titleController,
-                decoration: const InputDecoration(labelText: "Title"),
-              ),
+        child: Form(
+          key: _formKey,
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                TextFormField(
+                  controller: titleController,
+                  decoration: const InputDecoration(labelText: "Title"),
+                  validator: (value) {
+                    if (value == null || value.trim().isEmpty) {
+                      return "Please enter a title";
+                    }
+                    return null;
+                  },
+                ),
 
-              TextField(
-                controller: priceController,
-                decoration: const InputDecoration(labelText: "Price"),
-                keyboardType: TextInputType.number,
-              ),
+                TextFormField(
+                  controller: priceController,
+                  decoration: const InputDecoration(labelText: "Price"),
+                  keyboardType: TextInputType.number,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "Please enter a price";
+                    }
+                    if (double.tryParse(value) == null) {
+                      return "Enter a valid number";
+                    }
+                    return null;
+                  },
+                ),
 
-              TextField(
-                controller: descriptionController,
-                decoration: const InputDecoration(labelText: "Description"),
-              ),
+                TextFormField(
+                  controller: descriptionController,
+                  decoration: const InputDecoration(labelText: "Description"),
+                  validator: (value) {
+                    if (value == null || value.trim().isEmpty) {
+                      return "Please enter a description";
+                    }
+                    return null;
+                  },
+                ),
 
-              TextField(
-                controller: imageController,
-                decoration: const InputDecoration(labelText: "Image URL"),
-              ),
+                TextFormField(
+                  controller: imageController,
+                  decoration: const InputDecoration(labelText: "Image URL"),
+                  validator: (value) {
+                    if (value == null || value.trim().isEmpty) {
+                      return "Please enter an image URL";
+                    }
+                    return null;
+                  },
+                ),
 
-              const SizedBox(height: 20),
+                const SizedBox(height: 20),
 
-              ElevatedButton(
-                onPressed: updateProduct,
-                child: const Text("Update Product"),
-              ),
-            ],
+                ElevatedButton(
+                  onPressed: provider.isLoading ? null : updateProduct,
+                  child: provider.isLoading
+                      ? const SizedBox(
+                          width: 20,
+                          height: 20,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            color: Colors.white,
+                          ),
+                        )
+                      : const Text("Update Product"),
+                ),
+              ],
+            ),
           ),
         ),
       ),

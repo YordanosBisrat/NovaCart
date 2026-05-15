@@ -30,6 +30,8 @@ class ProductProvider extends ChangeNotifier {
   }
 
   Future<void> addProduct(Map<String, dynamic> data) async {
+    _isLoading = true;
+    notifyListeners();
     try {
       final newProduct = await _apiService.addProduct(data);
       _products.add(newProduct);
@@ -38,9 +40,13 @@ class ProductProvider extends ChangeNotifier {
       _error = e.toString();
       notifyListeners();
     }
+    _isLoading = false;
+    notifyListeners();
   }
 
   Future<void> deleteProduct(int id) async {
+    _isLoading = true;
+    notifyListeners();
     try {
       await _apiService.deleteProduct(id);
       _products.removeWhere((p) => p.id == id);
@@ -49,9 +55,13 @@ class ProductProvider extends ChangeNotifier {
       _error = e.toString();
       notifyListeners();
     }
+    _isLoading = false;
+    notifyListeners();
   }
 
   Future<void> updateProduct(int id, Map<String, dynamic> data) async {
+    _isLoading = true;
+    notifyListeners();
     try {
       final updated = await _apiService.updateProduct(id, data);
 
@@ -65,5 +75,7 @@ class ProductProvider extends ChangeNotifier {
       _error = e.toString();
       notifyListeners();
     }
+    _isLoading = false;
+    notifyListeners();
   }
 }

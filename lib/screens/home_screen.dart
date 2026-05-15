@@ -28,7 +28,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return Scaffold(
       appBar: AppBar(title: const Text("NovaCart")),
-      body: provider.isLoading
+      body: provider.isLoading && provider.products.isEmpty
           ? const Center(child: CircularProgressIndicator())
           : provider.error != null
           ? Center(child: Text(provider.error!))
@@ -58,6 +58,12 @@ class _HomeScreenState extends State<HomeScreen> {
                         width: 60,
                         height: 60,
                         fit: BoxFit.contain,
+                        errorBuilder: (context, error, stackTrace) {
+                          return const Icon(
+                            Icons.image_not_supported,
+                            size: 50,
+                          );
+                        },
                       ),
 
                       title: Text(
@@ -97,13 +103,45 @@ class _HomeScreenState extends State<HomeScreen> {
 
                           IconButton(
                             icon: const Icon(Icons.delete, color: Colors.red),
-                            onPressed: () {
-                              provider.deleteProduct(product.id);
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text("Product deleted"),
-                                ),
+                            onPressed: () async {
+                              final confirm = await showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return AlertDialog(
+                                    title: const Text("Delete Product"),
+                                    content: const Text(
+                                      "Are you sure you want to delete this product?",
+                                    ),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.pop(context, false);
+                                        },
+                                        child: const Text("Cancel"),
+                                      ),
+
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.pop(context, true);
+                                        },
+                                        child: const Text("Delete"),
+                                      ),
+                                    ],
+                                  );
+                                },
                               );
+
+                              if (!context.mounted) return;
+
+                              if (confirm == true) {
+                                provider.deleteProduct(product.id);
+
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text("Product deleted"),
+                                  ),
+                                );
+                              }
                             },
                           ),
                         ],
