@@ -14,7 +14,20 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (_) => ProductProvider(),
-      child: MaterialApp(debugShowCheckedModeBanner: false, home: HomeScreen()),
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'NovaCart',
+        theme: ThemeData(
+          primarySwatch: Colors.indigo,
+          scaffoldBackgroundColor: Colors.grey[100],
+          appBarTheme: const AppBarTheme(
+            backgroundColor: Colors.indigo,
+            foregroundColor: Colors.white,
+            centerTitle: true,
+          ),
+        ),
+        home: const HomeScreen(),
+      ),
     );
   }
 }

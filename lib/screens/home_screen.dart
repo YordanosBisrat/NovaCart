@@ -32,39 +32,82 @@ class _HomeScreenState extends State<HomeScreen> {
           ? const Center(child: CircularProgressIndicator())
           : provider.error != null
           ? Center(child: Text(provider.error!))
+          : provider.products.isEmpty
+          ? const Center(child: Text("No products found"))
           : ListView.builder(
               itemCount: provider.products.length,
               itemBuilder: (context, index) {
                 final product = provider.products[index];
 
                 return Card(
-                  child: ListTile(
-                    leading: Image.network(product.image, width: 50),
-                    title: Text(product.title),
-                    subtitle: Text("\$${product.price}"),
-                    trailing: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        IconButton(
-                          icon: const Icon(Icons.edit, color: Colors.blue),
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (_) =>
-                                    EditProductScreen(product: product),
-                              ),
-                            );
-                          },
-                        ),
+                  margin: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 8,
+                  ),
+                  elevation: 4,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: ListTile(
+                      contentPadding: const EdgeInsets.all(8),
 
-                        IconButton(
-                          icon: const Icon(Icons.delete, color: Colors.red),
-                          onPressed: () {
-                            provider.deleteProduct(product.id);
-                          },
+                      leading: Image.network(
+                        product.image,
+                        width: 60,
+                        height: 60,
+                        fit: BoxFit.contain,
+                      ),
+
+                      title: Text(
+                        product.title,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(fontWeight: FontWeight.bold),
+                      ),
+
+                      subtitle: Padding(
+                        padding: const EdgeInsets.only(top: 8),
+                        child: Text(
+                          "\$${product.price}",
+                          style: const TextStyle(
+                            color: Colors.green,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                          ),
                         ),
-                      ],
+                      ),
+
+                      trailing: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          IconButton(
+                            icon: const Icon(Icons.edit, color: Colors.blue),
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) =>
+                                      EditProductScreen(product: product),
+                                ),
+                              );
+                            },
+                          ),
+
+                          IconButton(
+                            icon: const Icon(Icons.delete, color: Colors.red),
+                            onPressed: () {
+                              provider.deleteProduct(product.id);
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text("Product deleted"),
+                                ),
+                              );
+                            },
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 );
