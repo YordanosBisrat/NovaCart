@@ -126,8 +126,7 @@ flutter run -d chrome       # Web
 flutter run -d windows      # Windows desktop
 flutter run                 # Connected mobile device
 ```
-
-
+---
 
 ## Tech Stack
 
@@ -150,6 +149,9 @@ http: ^1.6.0         # Network requests
 
 ## Author
 Developed as part of a Mobile Application Development assignment, focused on clean architecture and real-world Flutter practices.
-# Name: Yordanos Bisrat 
-# ID: UGR/3362/16
-## Section 1
+
+## Student Information
+
+- **Name:** Yordanos Bisrat
+- **ID:** UGR/3362/16
+- **Section:** 1
