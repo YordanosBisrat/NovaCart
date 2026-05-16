@@ -90,6 +90,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
                     return null;
                   },
                 ),
+                const SizedBox(height: 16),
 
                 TextFormField(
                   controller: priceController,
@@ -105,6 +106,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
                     return null;
                   },
                 ),
+                const SizedBox(height: 16),
 
                 TextFormField(
                   controller: descriptionController,
@@ -116,6 +118,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
                     return null;
                   },
                 ),
+                const SizedBox(height: 16),
 
                 TextFormField(
                   controller: imageController,
@@ -128,7 +131,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
                   },
                 ),
 
-                const SizedBox(height: 20),
+                const SizedBox(height: 28),
 
                 ElevatedButton(
                   onPressed: provider.isLoading ? null : updateProduct,

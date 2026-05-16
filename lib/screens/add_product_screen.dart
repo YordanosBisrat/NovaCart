@@ -65,6 +65,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                   return null;
                 },
               ),
+              const SizedBox(height: 16),
               TextFormField(
                 controller: _priceController,
                 decoration: const InputDecoration(labelText: "Price"),
@@ -81,6 +82,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                   return null;
                 },
               ),
+              const SizedBox(height: 16),
               TextFormField(
                 controller: _descriptionController,
                 decoration: const InputDecoration(labelText: "Description"),
@@ -91,11 +93,12 @@ class _AddProductScreenState extends State<AddProductScreen> {
                   return null;
                 },
               ),
+              const SizedBox(height: 16),
               TextFormField(
                 controller: _imageController,
                 decoration: const InputDecoration(labelText: "Image URL"),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 28),
               Consumer<ProductProvider>(
                 builder: (context, provider, child) {
                   return ElevatedButton(
