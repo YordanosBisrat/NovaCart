@@ -17,7 +17,6 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
-
       Provider.of<ProductProvider>(context, listen: false).fetchProducts();
     });
   }
@@ -30,7 +29,11 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: AppBar(
         title: const Text(
           "NovaCart",
-          style: TextStyle(fontWeight: FontWeight.w600),
+          style: TextStyle(
+            fontWeight: FontWeight.w700,
+            color: Color(0xFF5C3D2E),
+            fontSize: 22,
+          ),
         ),
         centerTitle: true,
         actions: [
@@ -39,7 +42,11 @@ class _HomeScreenState extends State<HomeScreen> {
             child: Chip(
               label: Text(
                 "${provider.products.length}",
-                style: const TextStyle(fontSize: 12),
+                style: const TextStyle(
+                  fontSize: 12,
+                  color: Color(0xFF5C3D2E),
+                  fontWeight: FontWeight.w600,
+                ),
               ),
               visualDensity: VisualDensity.compact,
             ),
@@ -47,7 +54,9 @@ class _HomeScreenState extends State<HomeScreen> {
         ],
       ),
       body: provider.isLoading && provider.products.isEmpty
-          ? const Center(child: CircularProgressIndicator())
+          ? const Center(
+              child: CircularProgressIndicator(color: Color(0xFFC4866A)),
+            )
           : provider.error != null
           ? Center(
               child: Column(
@@ -56,19 +65,20 @@ class _HomeScreenState extends State<HomeScreen> {
                   const Icon(
                     Icons.error_outline,
                     size: 60,
-                    color: Colors.redAccent,
+                    color: Color(0xFFC4866A),
                   ),
                   const SizedBox(height: 12),
                   Text(
                     provider.error!,
                     textAlign: TextAlign.center,
-                    style: const TextStyle(fontSize: 14),
+                    style: const TextStyle(
+                      fontSize: 14,
+                      color: Color(0xFFA0857A),
+                    ),
                   ),
                   const SizedBox(height: 10),
                   ElevatedButton(
-                    onPressed: () {
-                      provider.fetchProducts();
-                    },
+                    onPressed: () => provider.fetchProducts(),
                     child: const Text("Retry"),
                   ),
                 ],
@@ -82,22 +92,27 @@ class _HomeScreenState extends State<HomeScreen> {
                   Icon(
                     Icons.inventory_2_outlined,
                     size: 60,
-                    color: Colors.grey,
+                    color: Color(0xFFE8D5C4),
                   ),
                   SizedBox(height: 12),
                   Text(
                     "No products yet",
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      color: Color(0xFF5C3D2E),
+                    ),
                   ),
                   SizedBox(height: 6),
                   Text(
                     "Tap + to add your first product",
-                    style: TextStyle(color: Colors.grey),
+                    style: TextStyle(color: Color(0xFFA0857A)),
                   ),
                 ],
               ),
             )
           : ListView.builder(
+              padding: const EdgeInsets.only(top: 8, bottom: 100),
               itemCount: provider.products.length,
               itemBuilder: (context, index) {
                 final product = provider.products[index];
@@ -107,10 +122,12 @@ class _HomeScreenState extends State<HomeScreen> {
                     horizontal: 12,
                     vertical: 6,
                   ),
-                  elevation: 0,
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(14),
-                    side: BorderSide(color: Colors.grey.shade200),
+                    borderRadius: BorderRadius.circular(16),
+                    side: const BorderSide(
+                      color: Color(0xFFE8D5C4),
+                      width: 0.8,
+                    ),
                   ),
                   child: Padding(
                     padding: const EdgeInsets.symmetric(
@@ -119,43 +136,47 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     child: ListTile(
                       contentPadding: const EdgeInsets.all(10),
-
                       leading: Container(
-                        width: 55,
-                        height: 55,
+                        width: 58,
+                        height: 58,
                         decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          color: const Color(0xFFF3F4FF),
+                          borderRadius: BorderRadius.circular(12),
+                          color: const Color(0xFFFAF3EB),
                         ),
                         child: Image.network(
                           product.image,
                           fit: BoxFit.contain,
-                          errorBuilder: (context, error, stackTrace) {
-                            return const Icon(Icons.image_not_supported);
-                          },
+                          errorBuilder: (context, error, stackTrace) =>
+                              const Icon(
+                                Icons.image_not_supported,
+                                color: Color(0xFFE8D5C4),
+                              ),
                         ),
                       ),
-
                       title: Text(
                         product.title,
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(fontWeight: FontWeight.w600),
+                        style: const TextStyle(
+                          fontWeight: FontWeight.w600,
+                          color: Color(0xFF5C3D2E),
+                        ),
                       ),
-
                       subtitle: Text(
                         "\$${product.price.toStringAsFixed(2)}",
                         style: const TextStyle(
-                          color: Color(0xFF4F46E5),
+                          color: Color(0xFFC4866A),
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-
                       trailing: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           IconButton(
-                            icon: const Icon(Icons.edit, color: Colors.blue),
+                            icon: const Icon(
+                              Icons.edit_outlined,
+                              color: Color(0xFFA0857A),
+                            ),
                             onPressed: () {
                               Navigator.push(
                                 context,
@@ -166,35 +187,50 @@ class _HomeScreenState extends State<HomeScreen> {
                               );
                             },
                           ),
-
                           IconButton(
-                            icon: const Icon(Icons.delete, color: Colors.red),
+                            icon: const Icon(
+                              Icons.delete_outline,
+                              color: Color(0xFFC4866A),
+                            ),
                             onPressed: () async {
-                              final confirm = await showDialog(
+                              final confirm = await showDialog<bool>(
                                 context: context,
-                                builder: (context) {
-                                  return AlertDialog(
-                                    title: const Text("Delete Product"),
-                                    content: const Text(
-                                      "Are you sure you want to delete this product?",
+                                builder: (context) => AlertDialog(
+                                  backgroundColor: Colors.white,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(16),
+                                  ),
+                                  title: const Text(
+                                    "Delete Product",
+                                    style: TextStyle(color: Color(0xFF5C3D2E)),
+                                  ),
+                                  content: const Text(
+                                    "Are you sure you want to delete this product?",
+                                    style: TextStyle(color: Color(0xFFA0857A)),
+                                  ),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () =>
+                                          Navigator.pop(context, false),
+                                      child: const Text(
+                                        "Cancel",
+                                        style: TextStyle(
+                                          color: Color(0xFFA0857A),
+                                        ),
+                                      ),
                                     ),
-                                    actions: [
-                                      TextButton(
-                                        onPressed: () {
-                                          Navigator.pop(context, false);
-                                        },
-                                        child: const Text("Cancel"),
+                                    TextButton(
+                                      onPressed: () =>
+                                          Navigator.pop(context, true),
+                                      child: const Text(
+                                        "Delete",
+                                        style: TextStyle(
+                                          color: Color(0xFFC4866A),
+                                        ),
                                       ),
-
-                                      TextButton(
-                                        onPressed: () {
-                                          Navigator.pop(context, true);
-                                        },
-                                        child: const Text("Delete"),
-                                      ),
-                                    ],
-                                  );
-                                },
+                                    ),
+                                  ],
+                                ),
                               );
 
                               if (!context.mounted) return;
@@ -205,15 +241,21 @@ class _HomeScreenState extends State<HomeScreen> {
 
                                 if (provider.error == null) {
                                   ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                      content: Text("Product deleted"),
+                                    SnackBar(
+                                      content: const Text("Product deleted"),
+                                      backgroundColor: const Color(0xFFC4866A),
+                                      behavior: SnackBarBehavior.floating,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(12),
+                                      ),
                                     ),
                                   );
                                 } else {
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     SnackBar(
                                       content: Text(provider.error!),
-                                      backgroundColor: Colors.red,
+                                      backgroundColor: Colors.redAccent,
+                                      behavior: SnackBarBehavior.floating,
                                     ),
                                   );
                                 }
@@ -234,7 +276,7 @@ class _HomeScreenState extends State<HomeScreen> {
             MaterialPageRoute(builder: (_) => const AddProductScreen()),
           );
         },
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         child: const Icon(Icons.add),
       ),
     );

@@ -26,9 +26,8 @@ class _AddProductScreenState extends State<AddProductScreen> {
   }
 
   void _submit() async {
-    if (!_formKey.currentState!.validate()) {
-      return;
-    }
+    if (!_formKey.currentState!.validate()) return;
+
     final provider = Provider.of<ProductProvider>(context, listen: false);
 
     final data = {
@@ -42,14 +41,44 @@ class _AddProductScreenState extends State<AddProductScreen> {
 
     if (!mounted) return;
 
+    if (provider.error == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: const Text("Product added"),
+          backgroundColor: const Color(0xFFC4866A),
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+        ),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(provider.error!),
+          backgroundColor: Colors.redAccent,
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+    }
+
     Navigator.pop(context);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Add Product")),
-      body: Padding(
+      appBar: AppBar(
+        title: const Text(
+          "Add Product",
+          style: TextStyle(
+            color: Color(0xFF5C3D2E),
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        iconTheme: const IconThemeData(color: Color(0xFF5C3D2E)),
+      ),
+      body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Form(
           key: _formKey,
@@ -57,6 +86,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
             children: [
               TextFormField(
                 controller: _titleController,
+                style: const TextStyle(color: Color(0xFF5C3D2E)),
                 decoration: const InputDecoration(labelText: "Title"),
                 validator: (value) {
                   if (value == null || value.trim().isEmpty) {
@@ -68,24 +98,25 @@ class _AddProductScreenState extends State<AddProductScreen> {
               const SizedBox(height: 16),
               TextFormField(
                 controller: _priceController,
+                style: const TextStyle(color: Color(0xFF5C3D2E)),
                 decoration: const InputDecoration(labelText: "Price"),
                 keyboardType: TextInputType.number,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return "Please enter a price";
                   }
-
                   if (double.tryParse(value) == null) {
                     return "Enter a valid number";
                   }
-
                   return null;
                 },
               ),
               const SizedBox(height: 16),
               TextFormField(
                 controller: _descriptionController,
+                style: const TextStyle(color: Color(0xFF5C3D2E)),
                 decoration: const InputDecoration(labelText: "Description"),
+                maxLines: 3,
                 validator: (value) {
                   if (value == null || value.trim().isEmpty) {
                     return "Please enter a description";
@@ -96,6 +127,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
               const SizedBox(height: 16),
               TextFormField(
                 controller: _imageController,
+                style: const TextStyle(color: Color(0xFF5C3D2E)),
                 decoration: const InputDecoration(labelText: "Image URL"),
               ),
               const SizedBox(height: 28),
@@ -112,7 +144,13 @@ class _AddProductScreenState extends State<AddProductScreen> {
                               color: Colors.white,
                             ),
                           )
-                        : const Text("Add Product"),
+                        : const Text(
+                            "Add Product",
+                            style: TextStyle(
+                              fontWeight: FontWeight.w600,
+                              fontSize: 15,
+                            ),
+                          ),
                   );
                 },
               ),

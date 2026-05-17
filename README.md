@@ -1,7 +1,6 @@
 # NovaCart
 ![Flutter](https://img.shields.io/badge/Flutter-3.x-blue?logo=flutter)
 ![Provider](https://img.shields.io/badge/State%20Management-Provider-purple)
-![License](https://img.shields.io/badge/License-MIT-green)
 
 A modern Flutter CRUD application powered by Provider and [Fake Store API](https://fakestoreapi.com/) (public REST API).
 
@@ -36,13 +35,18 @@ The project focuses on API integration, state management, and clean UI/UX design
 
 ## Screenshots
 
-| Home | Delete Confirmation | After Delete |
-|------|-------------------|--------------|
-| ![Home Screen](screenshots/home.png) | ![Delete Confirmation](screenshots/delete-confirmation.png) | ![After Delete](screenshots/delete.png) |
+| Home | Edit Product | 
+|------|-------------------|
+| ![Home Screen](screenshots/home.png) | ![Edit Product](screenshots/edit.png) | 
 
-| Add Product (empty) | Add Product (validation) | Edit Product |
-|--------------------|--------------------------|--------------|
-| ![Add Screen](screenshots/add.png) | ![Add Validation](screenshots/add2.png) | ![Edit Screen](screenshots/edit.png) |
+| After Edit | Delete Confirmation | After Delete |
+|-------------|-------------------|--------------|
+| ![After Edit](screenshots/updated.png) | ![Delete Confirmation](screenshots/delete-confirmation.png) | ![After Delete](screenshots/deleted.png) |
+
+
+| Add Product | Add Required to Fill | After Add |
+|-------------|--------------|--------------|
+| ![Add Product](screenshots/add.png) | ![Add Required to Fill](screenshots/add_required_to_fill.png) | ![After Add](screenshots/added.png) |
 
 ---
 
