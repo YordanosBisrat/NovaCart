@@ -200,13 +200,23 @@ class _HomeScreenState extends State<HomeScreen> {
                               if (!context.mounted) return;
 
                               if (confirm == true) {
-                                provider.deleteProduct(product.id);
+                                await provider.deleteProduct(product.id);
+                                if (!context.mounted) return;
 
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                    content: Text("Product deleted"),
-                                  ),
-                                );
+                                if (provider.error == null) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                      content: Text("Product deleted"),
+                                    ),
+                                  );
+                                } else {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text(provider.error!),
+                                      backgroundColor: Colors.red,
+                                    ),
+                                  );
+                                }
                               }
                             },
                           ),
